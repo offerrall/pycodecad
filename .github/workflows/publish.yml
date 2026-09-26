@@ -1,0 +1,44 @@
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: The release tag is the package version
+        run: |
+          version=$(grep -Po '__version__ = "\K[^"]+' src/pycodecad/__init__.py)
+          test "${{ github.event.release.tag_name }}" = "v$version" || {
+            echo "Release tag ${{ github.event.release.tag_name }} is not v$version (src/pycodecad/__init__.py)"
+            exit 1
+          }
+      - uses: astral-sh/setup-uv@v6
+      - name: Tests and type checks (window and OpenGL tests skip without a display)
+        env:
+          UV_PROJECT_ENVIRONMENT: venv
+        run: |
+          uv sync --locked
+          venv/bin/python -m pytest -q
+          uvx pyright
+      - run: uv build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
