@@ -15,7 +15,7 @@ The window works on the `.py` files of one folder: it edits one of them and runs
 
 ## Layout
 
-- **Top bar**: icon buttons (hover one for its name and shortcut), the "Changed on disk" notice and
+- **Top bar**: icon buttons (hover one for its name and shortcut), the "changed on disk" notices and
   the name of the file you edit (and of the main file, when you edit another one).
 - **Left**: the files of the folder, then the [Parameters](parameters.md) panel (only when the
   script exposes a function), the code, and under it the error or what the script printed.
@@ -93,6 +93,8 @@ else than the screen shows.
 - When someone else changes the file (another editor, an AI assistant), the top bar says
   **Changed on disk** with a **Reload** button. Reload replaces the code with the file (unsaved
   edits are lost, and the notice says so); then press Run to see it. pycodecad never reloads by itself.
+- When another file the part reads changes (a helper module, an asset), the top bar says
+  "helper.py changed on disk: Run to see it" until the next Run.
 - **Save as** asks for a name (next to the current file, or a full path) and refuses one that
   already exists.
 

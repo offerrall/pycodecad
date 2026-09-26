@@ -511,6 +511,19 @@ def helped_part(folder):
     return folder
 
 
+def test_a_helper_changed_on_disk_is_noticed_until_the_next_run(tmp_path):
+    helped_part(tmp_path)
+    ws = Workspace(tmp_path, run=False)
+    finish_run(ws)
+    ws.watch_file()
+    assert ws.error is None and ws.inputs_changed == []
+    (tmp_path / "helper.py").write_text("SIZE = 30\n")  # e.g. an AI assistant, with part.py in the editor
+    ws.watch_file()
+    assert ws.inputs_changed == [str(tmp_path / "helper.py")] and not ws.disk_changed
+    finish_run(ws)
+    assert ws.inputs_changed == [] and "30" in ws.stdout
+
+
 def test_the_main_file_of_a_folder(tmp_path):
     (tmp_path / "a_notes.py").write_text("x = 1\n")
     (tmp_path / "b_part.py").write_text("show(1)\n")

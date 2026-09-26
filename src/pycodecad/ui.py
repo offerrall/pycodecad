@@ -293,6 +293,11 @@ def topbar(ws: Workspace) -> None:
         imgui.set_cursor_pos_y(top + (TOOL_SIDE - imgui.get_frame_height()) / 2)
         if button(f"{icon('refresh-cw')} Reload", "Load the file from disk; then Run to see it"):
             ws.reload()
+    if ws.inputs_changed:  # a helper module or asset changed (e.g. by an AI assistant): Run shows it
+        imgui.same_line(spacing=16.0)
+        imgui.set_cursor_pos_y(text_y)
+        more = f" and {len(ws.inputs_changed) - 1} more" if len(ws.inputs_changed) > 1 else ""
+        imgui.text_colored(WARNING, f"{Path(ws.inputs_changed[0]).name}{more} changed on disk: Run to see it")
     name = ws.path.name
     runs = f"  ·  Run: {ws.main.name}" if ws.path != ws.main else ""  # the main, when another file is edited
     width = imgui.calc_text_size(name + runs)[0]

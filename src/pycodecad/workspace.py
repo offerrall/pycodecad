@@ -141,6 +141,7 @@ class Workspace:
         self.shown_job: tuple[Job, dict[str, object], dict[str, tuple[int, int]]] | None = None
         self.child_stamp: dict[str, tuple[int, int]] = {}  # input_stamp at the start of the child
         self.written: dict[str, tuple[int, int]] = {}  # file_signature of the exports and pictures written
+        self.inputs_changed: list[str] = []  # files the part reads that changed since the run on screen
         self.exports: list[runner.Run] = []
         self.stopped: list[runner.Run] = []  # killed runs still writing their final last-run file
         self.message = ""  # last status message
@@ -298,6 +299,7 @@ class Workspace:
             if result.error is None:  # on errors the last good objects (and parameters) stay on screen
                 used = {f"{e.function}.{p.name}": p.value for e in result.parameters for p in e.params}
                 self.shown_job = (self.child_job, used, self.child_stamp)
+                self.inputs_changed = []
                 self.set_parameters(result.parameters, used, self.child_values)
                 self.shown = result.shown
                 self.frames, self.clock, self.playing = result.frames, 0.0, True
@@ -497,9 +499,11 @@ class Workspace:
         return True
 
     def watch_file(self) -> None:
-        """Notice (never apply) changes made to the edited file by someone else, and files that
-        appear in or disappear from the folder."""
+        """Notice (never apply) changes made to the edited file by someone else, to the other files
+        the part reads (helper modules, assets: Run shows them), and files that appear in or
+        disappear from the folder."""
         self.file_list = python_files(self.folder)
+        self.inputs_changed = self.changed_inputs(self.shown_job[2]) if self.shown_job else []
         mtime = self._mtime(self.path)
         if mtime is None or mtime == self.file_mtime:
             return
