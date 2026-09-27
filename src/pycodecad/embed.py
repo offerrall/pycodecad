@@ -11,6 +11,6 @@ change in a minor version). See docs/embedding.md.
 """
 from .viewer import Viewer
 from .window import Window, create_window
-from .workspace import Workspace
+from .workspace import TOOLS, Button, Workspace
 
-__all__ = ["Viewer", "Window", "Workspace", "create_window"]
+__all__ = ["TOOLS", "Button", "Viewer", "Window", "Workspace", "create_window"]

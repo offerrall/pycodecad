@@ -224,3 +224,31 @@ def test_the_file_list_and_opening_another_file_with_unsaved_changes(window, tmp
                       else selectable(label, *args))
         frames(window, draw, lambda: True)
     assert part.path.name == "part.py" and part.main.name == "part.py"
+
+
+def test_an_app_hides_tools_adds_buttons_and_hears_each_save(window, tmp_path):
+    from pycodecad.embed import Button
+
+    script = tmp_path / "part.py"
+    script.write_text(EXPOSED)
+    part = Workspace(script, run=False)
+    saves = []
+    part.on_save = lambda ws: saves.append(ws.saved_text)
+    part.hidden = {"save_as", "paste"}
+    part.buttons = [Button("cloud-upload", lambda: None, "Upload"), Button("Close", lambda: None, enabled=False)]
+    draw = lambda: (imgui.set_next_window_focus(), in_window("Part", part.draw)())
+
+    part.editor = textedit.insert(part.editor, "# one\n")
+    window.gui.events.append((glfw.KEY_S, glfw.MOD_CONTROL | glfw.MOD_SHIFT, False))  # Save as is hidden
+    frames(window, draw, lambda: True)
+    assert not part.save_as_open and part.dirty() and saves == []
+    window.gui.events.append((glfw.KEY_S, glfw.MOD_CONTROL, False))
+    frames(window, draw, lambda: True)
+    assert not part.dirty() and saves == [script.read_text()]
+    assert part.save_as("copy.py") and len(saves) == 2  # the app hears Save as too
+
+    part.hidden = {"save"}
+    part.editor = textedit.insert(part.editor, "# two\n")
+    window.gui.events.append((glfw.KEY_S, glfw.MOD_CONTROL, False))  # Save is hidden: its shortcut too
+    frames(window, draw, lambda: True)
+    assert part.dirty() and len(saves) == 2

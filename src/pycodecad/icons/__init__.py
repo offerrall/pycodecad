@@ -19,6 +19,12 @@ CODEPOINTS = {
     "scan": 0xE257,
     "settings-2": 0xE245,
     "rotate-ccw": 0xE148,
+    # For apps' buttons (Workspace.buttons)
+    "arrow-left": 0xE048,
+    "cloud-upload": 0xE091,
+    "folder-open": 0xE247,
+    "upload": 0xE19E,
+    "x": 0xE1B2,
 }
 
 

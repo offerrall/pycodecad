@@ -13,9 +13,9 @@ from __future__ import annotations
 import os
 import threading
 import time
-from dataclasses import replace
+from dataclasses import dataclass, replace
 from pathlib import Path
-from typing import cast
+from typing import Callable, cast
 
 import glfw
 
@@ -36,6 +36,20 @@ with BuildPart() as part:
 
 show(part, name="part")
 """
+
+
+TOOLS = ("run", "save", "save_as", "ai_context", "copy", "paste", "export")  # the top bar's, for hidden
+
+
+@dataclass
+class Button:
+    """A button an app adds to a Workspace's top bar (see Workspace.buttons). label: an icon name of
+    icons.CODEPOINTS (drawn as the icon) or text; action: called when it is clicked; tip: shown on hover."""
+
+    label: str
+    action: Callable[[], object]
+    tip: str = ""
+    enabled: bool = True
 
 
 ZOOMS = (0.5, 0.67, 0.75, 0.8, 0.9, 1.0, 1.1, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0)  # code zoom steps, like browsers
@@ -153,6 +167,11 @@ class Workspace:
         self.split = 0.38  # fraction of the width used by the code
         self.code_zoom = 1.0  # size of the code text (Ctrl + / Ctrl - / Ctrl 0), one of ZOOMS
         self.closed = False
+        # For apps (see docs/embedding.md): top-bar tools not drawn (names of TOOLS; a hidden tool's
+        # shortcut is off too), buttons added after them, and a call after every successful save.
+        self.hidden: set[str] = set()
+        self.buttons: list[Button] = []
+        self.on_save: Callable[[Workspace], object] | None = None
         if not preloading.ident:
             preloading.start()
         window.components.add(self)
@@ -465,7 +484,15 @@ class Workspace:
         if self.read_only:
             self.say("Read only: scripts are never written", error=True)
             return False
-        return self._write(self.path)
+        if not self._write(self.path):
+            return False
+        self.saved()
+        return True
+
+    def saved(self) -> None:
+        """Tell the app (on_save) that the code was written: e.g. to upload the folder."""
+        if self.on_save is not None:
+            self.on_save(self)
 
     def save_as(self, target: str) -> bool:
         """Write the code to a new file and continue working on it (in normal mode). A copy of the
@@ -484,6 +511,7 @@ class Workspace:
         self.path = new
         self.file_list = python_files(self.folder)
         self.say(f"Saved as {new}")
+        self.saved()
         return True
 
     def _write(self, path: Path) -> bool:

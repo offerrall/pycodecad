@@ -98,6 +98,25 @@ build123d has loaded. Raises `OSError` when the file cannot be used.
   `discard()` first. `set_main(path)` makes another file the one that runs (its parameters and
   values start anew). `files()` lists the folder's `.py` files. `show_files = False` hides the
   list (e.g. an app that shows only a template).
+- Your app's controls (the top bar is pycodecad's, but you decide what it offers):
+  - `hidden`: a set of top-bar tools not drawn, from `TOOLS`: `"run"`, `"save"`, `"save_as"`,
+    `"ai_context"`, `"copy"`, `"paste"`, `"export"`. A hidden tool's shortcut is off too (a hidden
+    `"save"` makes Ctrl+S do nothing).
+  - `buttons`: a list of `Button(label, action, tip="", enabled=True)` drawn after pycodecad's
+    tools. `label` is an icon name of `pycodecad.icons.CODEPOINTS` (drawn as the icon, e.g.
+    `"cloud-upload"`, `"arrow-left"`, `"x"`) or text; `action()` runs when it is clicked. Change
+    the list or `enabled` between frames.
+  - `on_save`: `on_save(workspace)` is called after every successful Save (the button, Ctrl+S,
+    Save as, and Save in the unsaved-changes prompts), once the file is written. Use it to make
+    Save mean "save to my server": upload `workspace.folder` there. Keep it fast (the frame waits
+    for it): start a thread for the network and report with `workspace.say(message, error)`.
+
+  ```python
+  part = p3.Workspace(folder)
+  part.hidden = {"save_as"}                            # one file name per project
+  part.on_save = lambda ws: upload_in_a_thread(ws.folder)
+  part.buttons = [p3.Button("arrow-left", close_project, "Back to the projects")]
+  ```
 - State: `values` (`{"function.param": value}`, sent to the script on the next run),
   `parameters` (what the last run exposed), `shown` (the objects of the last good run), `error`,
   `stdout`, `message` (the status line), `main` (the file that runs), `path` (the file in the

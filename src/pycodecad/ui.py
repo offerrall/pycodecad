@@ -16,7 +16,7 @@ from slimgui import imgui
 from .api import FPS
 from . import camera as cam
 from . import editor, textedit, viewcube
-from .icons import icon
+from .icons import CODEPOINTS, icon
 from .imgui_backend import FONT_SIZE, clipboard_text
 
 if TYPE_CHECKING:
@@ -120,14 +120,14 @@ def shortcuts(ws: Workspace, events: list) -> list:
         key, mods, repeat = event if isinstance(event, tuple) else (None, 0, False)
         ctrl = mods & glfw.MOD_CONTROL
         if key == glfw.KEY_F5 or ctrl and key in (glfw.KEY_R, glfw.KEY_ENTER, glfw.KEY_KP_ENTER):
-            if not repeat:
+            if not repeat and "run" not in ws.hidden:
                 result.append(action(ws.run))
         elif ctrl and (step := zoom_step(key)) is not None:
             result.append(action(lambda step=step: ws.zoom_code(step)))
         elif ctrl and key == glfw.KEY_S and not ws.read_only:
-            if not repeat and mods & glfw.MOD_SHIFT:
+            if not repeat and mods & glfw.MOD_SHIFT and "save_as" not in ws.hidden:
                 result.append(action(lambda: setattr(ws, "save_as_open", True)))
-            elif not repeat:
+            elif not repeat and not mods & glfw.MOD_SHIFT and "save" not in ws.hidden:
                 result.append(action(ws.save))
         else:
             result.append(event)
@@ -264,17 +264,21 @@ def group_gap() -> None:
 def topbar(ws: Workspace) -> None:
     top = imgui.get_cursor_pos_y()
     imgui.push_style_color(imgui.Col.BUTTON, (0.0, 0.0, 0.0, 0.0))  # flat until hovered
-    if ws.child is not None and time.monotonic() - ws.run_started > 0.5:
+    if "run" in ws.hidden:
+        pass
+    elif ws.child is not None and time.monotonic() - ws.run_started > 0.5:
         if icon_button("square", "Stop", colors=STOP_COLORS):
             ws.stop()
     elif icon_button("play", "Run", "Ctrl+R / F5", colors=RUN_COLORS):
         ws.run()
-    group_gap()
+    if "run" not in ws.hidden:
+        group_gap()
     if not ws.read_only:  # read only: no code to save, copy or hand to an assistant
         code_buttons(ws)
-    if icon_button("download", "Export"):
+    if "export" not in ws.hidden and icon_button("download", "Export"):
         imgui.open_popup("export")
     imgui.pop_style_color()
+    app_buttons(ws)
     if imgui.begin_popup("export"):
         for label, extension, profile in EXPORTS:
             if imgui.menu_item(label)[0]:
@@ -311,26 +315,55 @@ def topbar(ws: Workspace) -> None:
     imgui.set_cursor_pos_y(top + TOOL_SIDE + imgui.get_style().item_spacing[1])
 
 
+def shown_tools(ws: Workspace, names: tuple[str, ...]) -> list[str]:
+    return [name for name in names if name not in ws.hidden]
+
+
 def code_buttons(ws: Workspace) -> None:
-    if icon_button("save", "Save", "Ctrl+S"):
+    """Save, Save as | AI context, Copy, Paste |: each group without its hidden tools (and its line)."""
+    for group in (("save", "save_as"), ("ai_context", "copy", "paste")):
+        tools = shown_tools(ws, group)
+        for index, tool in enumerate(tools):
+            if index:
+                imgui.same_line()
+            code_button(ws, tool)
+        if tools:
+            group_gap()
+
+
+def code_button(ws: Workspace, tool: str) -> None:
+    if tool == "save" and icon_button("save", "Save", "Ctrl+S"):
         ws.save()
-    imgui.same_line()
-    if icon_button("file-plus-2", "Save as (a new file, and continue there)", "Ctrl+Shift+S"):
+    elif tool == "save_as" and icon_button("file-plus-2", "Save as (a new file, and continue there)", "Ctrl+Shift+S"):
         ws.save_as_open = True
-    group_gap()
-    if icon_button("sparkles", "Copy AI context (lets an AI assistant work on the main file)"):
+    elif tool == "ai_context" and icon_button("sparkles", "Copy AI context (lets an AI assistant work on the main file)"):
         from .context import ai_context
 
         editor.copy_text(ai_context(ws.main, ws))
         ws.say("AI context copied: paste it into your assistant")
-    imgui.same_line()
-    if icon_button("copy", "Copy code"):
+    elif tool == "copy" and icon_button("copy", "Copy code"):
         editor.copy_text(ws.editor.text)
         ws.say("Code copied")
-    imgui.same_line()
-    if icon_button("clipboard-paste", "Paste code (replaces all the code)"):
+    elif tool == "paste" and icon_button("clipboard-paste", "Paste code (replaces all the code)"):
         ws.editor = textedit.replace_all(ws.editor, clipboard_text())
-    group_gap()
+
+
+def app_buttons(ws: Workspace) -> None:
+    """The app's buttons (Workspace.buttons), after pycodecad's own."""
+    for index, extra in enumerate(ws.buttons):
+        imgui.same_line(spacing=GROUP_GAP * 2 if index == 0 else -1.0)
+        imgui.push_id(f"app{index}")
+        imgui.begin_disabled(not extra.enabled)
+        if extra.label in CODEPOINTS:
+            pressed = icon_button(extra.label, extra.tip or extra.label)
+        else:
+            y = imgui.get_cursor_pos_y()
+            imgui.set_cursor_pos_y(y + (TOOL_SIDE - imgui.get_frame_height()) / 2)
+            pressed = button(extra.label, extra.tip) if extra.tip else imgui.button(extra.label)
+        imgui.end_disabled()
+        imgui.pop_id()
+        if pressed:
+            extra.action()
 
 
 def file_list(ws: Workspace, height: float) -> float:
