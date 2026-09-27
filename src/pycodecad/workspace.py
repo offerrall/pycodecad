@@ -93,8 +93,11 @@ def file_signature(path: str) -> tuple[int, int] | None:
 
 
 def find_main(folder: Path) -> Path:
-    """The part of a folder: the first .py file that calls show(), else the first one, else part.py."""
+    """The part of a folder: main.py when there is one, else the first .py file that calls show(),
+    else the first one, else part.py. Opening a file, or making another the main one, chooses it instead."""
     files = python_files(folder)
+    if folder / "main.py" in files:
+        return folder / "main.py"
     for path in files:
         try:
             if "show(" in sidecar.read_script(path):

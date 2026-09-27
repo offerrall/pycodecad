@@ -1,7 +1,7 @@
 """Code-CAD with build123d: write a Python script, see the part, export it."""
 from typing import TYPE_CHECKING
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
 __all__ = ["show", "clear", "frame", "import_mesh", "expose"]
 

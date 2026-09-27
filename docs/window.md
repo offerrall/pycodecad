@@ -47,7 +47,7 @@ A part is often several files: `gear.py` builds and shows the gear, `teeth.py` c
 outline of its teeth. Open the folder, or any of its files:
 
 ```bash
-pycodecad gear/            # the main file is the first .py (by name) that calls show()
+pycodecad gear/            # the main file is main.py, or else the first .py (by name) that calls show()
 pycodecad gear/gear.py     # the main file is gear.py
 ```
 
@@ -57,9 +57,9 @@ pycodecad gear/gear.py     # the main file is gear.py
   start with `.` or `_`); it follows the files that appear and disappear. Click one to edit it. With unsaved changes, the
   window first asks **Save**, **Discard** or **Cancel**.
 - The **main file**, marked with a play icon, is the part: **Run always runs the main file**, also
-  while you edit another one. Right-click a file to make it the main one. `pycodecad gear/` picks the
-  first file (by name) that calls `show()`, else the first file, else it creates `part.py` from a
-  small example.
+  while you edit another one. Right-click a file to make it the main one. `pycodecad gear/` picks
+  `main.py` when there is one, else the first file (by name) that calls `show()`, else the first
+  file, else it creates `part.py` from a small example.
 - **Unsaved edits run.** Run uses the editor's text for the file you are editing, also when it is a
   module the main file imports (`import teeth`); every other file comes from disk.
 - The parameters, the 3D view, the error, Export and the last-run file belong to the main file.

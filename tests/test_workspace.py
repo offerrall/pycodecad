@@ -730,3 +730,12 @@ def test_files_starting_with_dot_or_underscore_stay_out_of_the_list(tmp_path):
         (tmp_path / name).write_text("from pycodecad import show\nshow()\n" if name != "helper.py" else "x = 1\n")
     assert [path.name for path in python_files(tmp_path)] == ["helper.py", "part.py"]
     assert find_main(tmp_path).name == "part.py"
+
+
+def test_main_py_is_the_main_file_of_a_folder(tmp_path):
+    from pycodecad.workspace import Workspace, find_main
+
+    (tmp_path / "a_part.py").write_text("from pycodecad import show\nshow()\n")
+    (tmp_path / "main.py").write_text("x = 1\n")  # even without show(): its name says so
+    assert find_main(tmp_path).name == "main.py"
+    assert Workspace(tmp_path / "a_part.py", run=False).main.name == "a_part.py"  # an opened file wins

@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0
+
+- A folder's main file is `main.py` when it has one (else, as before, the first `.py` that
+  calls `show()`). Opening a file, or making another file the main one, still chooses it.
+
 ## 1.1.0
 
 - Embedding (`pycodecad.embed`): an app can hide top-bar tools (`Workspace.hidden`), add its own
