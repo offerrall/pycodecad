@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.1
+
+- Documentation only: the benchmark notes move from `benchmarks/README.md` to
+  `docs/benchmarks.md`, listed with the rest of the documentation. The code is the same as 1.2.0.
+
 ## 1.2.0
 
 - A folder's main file is `main.py` when it has one (else, as before, the first `.py` that

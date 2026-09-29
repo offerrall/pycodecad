@@ -1,6 +1,9 @@
-# Static execution and rendering
+# Benchmarks
 
-Run from the repository root with the development environment installed:
+## Static execution and rendering
+
+`benchmarks/pipeline.py` measures a Run and the window's drawing. Run it from the
+repository root with the development environment installed:
 
 ```sh
 venv/bin/python benchmarks/pipeline.py /path/to/part.py --output /tmp/part.json

@@ -75,6 +75,7 @@ pycodecad is small on purpose, readable in an afternoon: see [Design](docs/desig
 - [Embedding](docs/embedding.md): the window's parts in your own app (experimental).
 - [Design](docs/design.md): principles, platforms and plans.
 - [Development](docs/development.md): tests, type checks and releases.
+- [Benchmarks](docs/benchmarks.md): measuring a Run and the window's drawing, and the latest review.
 
 Examples: [examples/](examples/)
 
