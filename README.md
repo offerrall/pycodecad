@@ -21,19 +21,19 @@ The full documentation is at https://offerrall.github.io/pycodecad/.
 
 ## Documentation
 
-- [Overview](docs/overview.md): what pycodecad gives you, its requirements and credits.
-- [Getting started](docs/getting-started.md): a first part, run, save, export.
-- [The window](docs/window.md): layout, Run and Save, folders, read-only mode, the 3D view, shortcuts.
-- [Parameters](docs/parameters.md): `expose()`, its controls and `--set`.
-- [Scripts](docs/scripts.md): `show`, `clear`, `frame` (animations), `import_mesh`, paths, errors.
-- [Command line](docs/cli.md): `examples`, `check`, `render`, `export`, `context`, exit codes.
-- [Working with an AI assistant](docs/ai.md): the AI context and how an assistant checks its work.
-- [Files pycodecad writes](docs/files.md): everything pycodecad writes, and where.
-- [Embedding pycodecad in your app](docs/embedding.md): the window's parts in your own app (experimental).
-- [Design](docs/design.md): the principles and what follows from them.
-- [Limitations](docs/limitations.md): platforms, graphics and Python requirements, what is not supported.
+- [Overview](https://offerrall.github.io/pycodecad/): what pycodecad gives you, its requirements and credits.
+- [Getting started](https://offerrall.github.io/pycodecad/getting-started/): a first part, run, save, export.
+- [The window](https://offerrall.github.io/pycodecad/window/): layout, Run and Save, folders, read-only mode, the 3D view, shortcuts.
+- [Parameters](https://offerrall.github.io/pycodecad/parameters/): `expose()`, its controls and `--set`.
+- [Scripts](https://offerrall.github.io/pycodecad/scripts/): `show`, `clear`, `frame` (animations), `import_mesh`, paths, errors.
+- [Command line](https://offerrall.github.io/pycodecad/cli/): `examples`, `check`, `render`, `export`, `context`, exit codes.
+- [Working with an AI assistant](https://offerrall.github.io/pycodecad/ai/): the AI context and how an assistant checks its work.
+- [Files pycodecad writes](https://offerrall.github.io/pycodecad/files/): everything pycodecad writes, and where.
+- [Embedding pycodecad in your app](https://offerrall.github.io/pycodecad/embedding/): the window's parts in your own app (experimental).
+- [Design](https://offerrall.github.io/pycodecad/design/): the principles and what follows from them.
+- [Limitations](https://offerrall.github.io/pycodecad/limitations/): platforms, graphics and Python requirements, what is not supported.
 
 ### Maintaining
 
-- [Development](docs/development.md): tests, type checks and releases.
-- [Benchmarks](docs/benchmarks.md): measuring a Run and the window's drawing, with reference numbers.
+- [Development](https://offerrall.github.io/pycodecad/development/): tests, type checks and releases.
+- [Benchmarks](https://offerrall.github.io/pycodecad/benchmarks/): measuring a Run and the window's drawing, with reference numbers.
