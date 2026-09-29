@@ -21,7 +21,7 @@ def tray(width: Annotated[float, Min(20.0), Max(200.0), Slider(), Label("Width")
 show(expose(tray), name="tray")
 ```
 
-The full example is [examples/tray.py](../examples/tray.py).
+The full example is [examples/tray.py](https://github.com/offerrall/pycodecad/blob/main/examples/tray.py).
 
 ## Rules
 
@@ -29,7 +29,7 @@ The full example is [examples/tray.py](../examples/tray.py).
 simple, so a control can always be drawn for them:
 
 - Type `int`, `float`, `bool` or `str`, each with a default.
-- Annotated only with [pytypehint](https://github.com/offerrall/pytypehint) `Min`, `Max`, `Step`,
+- Annotated only with [pytypehint](https://offerrall.github.io/pytypehint/) `Min`, `Max`, `Step`,
   `Slider`, `Label` and `Description` (`Annotated[float, Min(0.0), ...]`).
 - `Min`, `Max` and `Step` are for numbers; on a `str`, `Min` and `Max` limit its length. A `bool`
   takes only `Label` and `Description`.

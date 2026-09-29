@@ -44,6 +44,7 @@ venvPath = "."
 venv = "venv"
 
 [project.urls]
+Documentation = "https://offerrall.github.io/pycodecad/"
 Repository = "https://github.com/offerrall/pycodecad"
 
 [tool.hatch.version]

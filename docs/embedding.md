@@ -1,6 +1,6 @@
 # Embedding pycodecad in your app
 
-> **Experimental in 1.0.** `pycodecad.embed` works and is tested, but its names and details may
+> **Experimental.** `pycodecad.embed` works and is tested, but its names and details may
 > change in a minor version. The window (`pycodecad file.py`), the command line and the script API
 > are stable.
 
@@ -16,7 +16,7 @@ file is written only on `save()`, each run is a child process.
 
 ## Example
 
-[examples/embedded_app.py](../examples/embedded_app.py): pick an order, the tray of
+[examples/embedded_app.py](https://github.com/offerrall/pycodecad/blob/main/examples/embedded_app.py): pick an order, the tray of
 `tray.py` is rebuilt to its measures, a second view shows it from the front, and Export
 writes one file per order.
 
@@ -164,4 +164,4 @@ The contract:
 - Keep 3MF imports inside the scripts run by the Workspace. On Linux, alternating native 3MF
   reads in the host process (`import_mesh` or build123d's `Mesher`) with exports in forked runs can
   make lib3mf reject a UUID as duplicated. The regular window and CLI perform these operations in
-  child processes; repeated imports and exports there have been checked successfully.
+  child processes, where this does not happen.

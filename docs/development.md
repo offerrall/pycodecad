@@ -15,7 +15,7 @@ skipped. `pyright` in the repository root must report 0 errors and 0 warnings.
 
 1. Set the version in `src/pycodecad/__init__.py` and add its entry to `CHANGELOG.md`.
 2. Publish a GitHub release tagged `v` plus that version:
-   `gh release create v1.0.0 --title v1.0.0 --generate-notes` (or from the GitHub page).
+   `gh release create vX.Y.Z --title vX.Y.Z --generate-notes` (or from the GitHub page).
 
 `.github/workflows/publish.yml` checks that the tag matches the version, runs the tests and pyright,
 builds the package and, only if all that passed, uploads it to PyPI with Trusted Publishing.
@@ -34,15 +34,15 @@ gh run view <run-id> --log-failed                # why it failed
   commit and push, then make the release again with the same version:
 
   ```bash
-  gh release delete v1.0.0 --cleanup-tag --yes   # deletes the release and its tag, here and on GitHub
-  git tag -d v1.0.0 2>/dev/null                  # the local tag too, if there is one
-  gh release create v1.0.0 --title v1.0.0 --target main --generate-notes
+  gh release delete vX.Y.Z --cleanup-tag --yes   # deletes the release and its tag, here and on GitHub
+  git tag -d vX.Y.Z 2>/dev/null                  # the local tag too, if there is one
+  gh release create vX.Y.Z --title vX.Y.Z --target main --generate-notes
   ```
 
 - **Failed in the upload** (the `publish` job): usually Trusted Publishing is not set up. On PyPI,
-  add a publisher (a pending one before the first release): project `pycodecad`, owner `offerrall`,
+  add a publisher (before the first release, a "pending publisher"): project `pycodecad`, owner `offerrall`,
   repository `pycodecad`, workflow `publish.yml`, environment `pypi`. Then rerun the failed job
   (`gh run rerun <run-id> --failed`): it uploads the same files.
 
 - **The version is already on PyPI** but something is wrong with it: do not reuse the number.
-  Fix it and release the next patch version (1.0.1), with its CHANGELOG entry.
+  Fix it and release the next patch version, with its CHANGELOG entry.

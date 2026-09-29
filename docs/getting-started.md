@@ -1,26 +1,7 @@
 # Getting started
 
-## Install
-
-pycodecad needs Python 3.12 or later and a graphics card with OpenGL 3.3.
-
-Linux is the native, tested platform; Windows and macOS are compatible targets, with native
-testing pending. On Windows x64 and Apple silicon use Python 3.12 or 3.13 for prebuilt dependencies.
-See [Platforms](design.md#platforms) for Intel Macs, other Python versions and platform differences.
-
-```bash
-pip install pycodecad
-```
-
-From source:
-
-```bash
-git clone https://github.com/offerrall/pycodecad
-cd pycodecad
-pip install .
-```
-
-Check it works:
+pycodecad needs a graphics card with OpenGL 3.3; see [Limitations](limitations.md) for the
+platforms. Once installed, check that the command works:
 
 ```bash
 pycodecad --version
@@ -82,7 +63,7 @@ the defaults. See [Scripts](scripts.md#plain-python).
 
 ## Next
 
-- Try the [examples](../examples/): `pycodecad examples` copies them to `./pycodecad-examples` (once)
+- Try the [examples](https://github.com/offerrall/pycodecad/tree/main/examples): `pycodecad examples` copies them to `./pycodecad-examples` (once)
   and opens the folder: loose parts in `parts.py`, composed in `gearbox.py` and shown in `assembly.py`, turning in
   `gears_turning.py`.
 - Make a part to measure with [Parameters](parameters.md).

@@ -87,7 +87,7 @@ show(Box(30, 30, 10) - solid)
 A script always runs from its own folder: that folder is the working directory and comes first in
 `sys.path`. So a part works on any PC when you keep it together:
 
-```
+```text
 tray/
   tray.py          # import helper, import_svg("logo.svg")
   helper.py
@@ -100,8 +100,8 @@ tray/
   absolute paths into your home folder.
 - Anything missing is the normal Python error, with its traceback and line.
 
-Examples: [parts.py](../examples/parts.py) holds loose parts (one function each),
-[gearbox.py](../examples/gearbox.py) composes them and [assembly.py](../examples/assembly.py) shows the result; [import_files.py](../examples/import_files.py) extrudes an SVG
+Examples: [parts.py](https://github.com/offerrall/pycodecad/blob/main/examples/parts.py) holds loose parts (one function each),
+[gearbox.py](https://github.com/offerrall/pycodecad/blob/main/examples/gearbox.py) composes them and [assembly.py](https://github.com/offerrall/pycodecad/blob/main/examples/assembly.py) shows the result; [import_files.py](https://github.com/offerrall/pycodecad/blob/main/examples/import_files.py) extrudes an SVG
 next to an STL.
 
 ## Plain python

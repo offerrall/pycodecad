@@ -30,9 +30,8 @@ pycodecad render part.py out.png --views window           # exactly what you see
 pycodecad render part.py out.png --set width=80           # other values for expose()
 ```
 
-What the assistant sees with `--views iso,front,top,right`:
-
-![A render grid: a gear in iso, front, top and right views, each labeled](images/render-grid.png)
+With `--views iso,front,top,right` the assistant sees the part from four labeled views in one
+picture ([Command line](cli.md#render) shows one).
 
 Every run, in the window or from the command line, also leaves its result in
 `.pycodecad/part.py.last-run.json` next to the script (the JSON of `check`), so the assistant can

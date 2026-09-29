@@ -5,7 +5,7 @@
 `benchmarks/pipeline.py` measures a Run and the window's drawing. Run it from the
 repository root with the development environment installed:
 
-```sh
+```bash
 venv/bin/python benchmarks/pipeline.py /path/to/part.py --output /tmp/part.json
 venv/bin/python benchmarks/pipeline.py --instances 1000 --samples 20 --output /tmp/instances.json
 ```
@@ -37,35 +37,32 @@ Each draw waits for the GPU, so its timing includes completion rather than only
 command submission. Window creation is separate from the first image; the
 regular application's event scheduling is not part of this measurement.
 
-## Review on 2026-09-26
+## Reference measurements
 
 Linux, Python 3.12.14, AMD Radeon Graphics (Rembrandt), 800×600. These are local
 measurements, not timing assertions or performance guarantees.
 
-| Static case | Before | After |
-| --- | --- | --- |
-| First image, 1,000 cylinder instances | 154 ms, 2,000 bounding-box calculations | 98 ms, 1,000 calculations |
-| CLI mesh preparation/upload, 1,000 cylinder instances | 1,000 meshes, 18 MiB, 76–170 ms | 1 shared mesh, 0.018 MiB, 2.5–2.8 ms |
-| Report with more than 1,000 objects | Calculates all details, then truncates | Calculates only the reported details; keeps the full object count |
+| Static case | Result |
+| --- | --- |
+| First image, 1,000 cylinder instances | 98 ms, 1,000 bounding-box calculations |
+| CLI mesh preparation/upload, 1,000 cylinder instances | 1 shared mesh, 0.018 MiB, 2.5–2.8 ms |
+| Report with more than 1,000 objects | Only the reported details are calculated; the full object count is kept |
 
-The owner's static feeder model had 61 objects sharing 14 meshes. The initial
-measurement took 421 ms to execute, 21 ms to write its report and 25 ms for the
-remaining Run overhead, followed by a 38 ms first image. Initial build123d import
-took another 1.7 seconds. Later wall times varied with desktop activity; the
-bounding-box calls fell from 122 to 61 and there were no repeated mesh uploads
-or bounding-box calculations while redrawing the unchanged scene.
+A feeder model with 61 objects sharing 14 meshes executes in about 400 ms, of which
+about 80 ms inside `show()`; writing its report takes about 20 ms, the rest of the
+Run about 25 ms, and the first image about 40 ms. The initial build123d import
+takes another 1.7 seconds. Redrawing the unchanged scene repeats no mesh uploads
+and no bounding-box calculations.
 
-CLI rendering now preserves the same mesh/placement representation used by the
-window. The former path first materialized `obj.world()` for every instance and
-uploaded each copy. The CLI preparation/upload comparison measures those two
-representations before drawing; it excludes execution, PNG encoding and context
-creation. The regression test compares translated and rotated instances against
-the corresponding transformed geometry in three views.
+What keeps these numbers low:
 
-The subsequent shape-copy change removes the deep geometry copy hidden inside
-build123d's `copy.copy()`. A small internal helper copies placements, labels,
-colors and assembly wrappers while sharing the BRep. With the feeder model,
-two alternating measurements of each implementation gave 437–441 ms execution
-with the former copy and 394–401 ms with the new one; time inside `show()` fell
-from 124–127 ms to about 80 ms. Both produced 61 objects sharing 14 meshes.
-Movement and STEP assembly metadata are checked by the export tests.
+- CLI rendering uses the same mesh/placement representation as the window: each
+  different shape is uploaded once and instances are placements, instead of a
+  transformed copy (`obj.world()`) uploaded per instance. The CLI
+  preparation/upload row measures that representation before drawing; it excludes
+  execution, PNG encoding and context creation. A regression test compares
+  translated and rotated instances against the transformed geometry in three views.
+- `show()` does not use build123d's `copy.copy()`, which deep-copies the geometry.
+  A small internal helper copies placements, labels, colors and assembly wrappers
+  while sharing the BRep. Movement and STEP assembly metadata are checked by the
+  export tests.

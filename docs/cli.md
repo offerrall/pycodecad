@@ -1,7 +1,7 @@
 # Command line
 
 ```bash
-pycodecad part.py [--read-only] [--no-run]           # the window (see window.md)
+pycodecad part.py [--read-only] [--no-run]           # the window
 pycodecad parts/gear/                                # the window on a folder
 pycodecad examples [folder]                          # copy the examples there once, open them
 pycodecad check part.py                              # run it, print the result as JSON
@@ -11,7 +11,7 @@ pycodecad context part.py                            # the AI context
 pycodecad --version
 ```
 
-`check`, `render` and `export` run the script fresh, without a window, in a child process, and take
+The window is described in [The window](window.md). `check`, `render` and `export` run the script fresh, without a window, in a child process, and take
 `--set KEY=VALUE` for [parameters](parameters.md#on-the-command-line). `pycodecad <command> --help`
 lists the options of each command.
 
@@ -44,7 +44,7 @@ pycodecad check part.py
   "parameters": [],
   "duration": 0.002,
   "time": "2026-09-26T07:52:08",
-  "pycodecad": "1.0.0"
+  "pycodecad": "X.Y.Z"
 }
 ```
 

@@ -45,31 +45,14 @@ dependencies, and nothing written outside the files listed in [Files](files.md).
 
 The window is built from parts: a Workspace (a folder: code, parameters, runs) and a Viewer (a 3D
 view), drawn as ImGui components in a plain frame loop. Other apps can use the same parts
-([Embedding](embedding.md), experimental in 1.0).
+([Embedding](embedding.md), experimental).
 
 ## Small on purpose
 
-pycodecad is about 4,600 lines of Python: small enough to read in an afternoon. It aims to be robust by
+pycodecad is small enough to read in an afternoon. It aims to be robust by
 being thin glue over well-tested libraries: build123d and Open CASCADE for the geometry, Dear ImGui
 for the interface, ModernGL and GLFW for drawing and windows, pytypehint for validating parameters.
 Its own code is covered by tests and type checked with pyright ([Development](development.md)).
-
-## Platforms
-
-Linux is the native platform: pycodecad is developed and tested there. Windows and macOS are
-compatible targets; their code paths have been reviewed, with testing on those systems still
-pending. Problems found there are fixed as they are reported.
-
-On Windows and macOS each run starts a new Python process, so startup takes longer than on Linux.
-Stop terminates that script, but does not reach processes the script started itself. On macOS the
-shortcuts use Ctrl, as documented, rather than Cmd. Windows AI context commands use PowerShell.
-
-Python 3.12+ and OpenGL 3.3 are required. Use Python 3.12 or 3.13 on Windows x64 and macOS Apple
-silicon for installation with prebuilt dependencies; resolution has been checked for both.
-With Python 3.14, ModernGL and glcontext currently need source builds on those platforms.
-Intel Macs also require building
-[slimgui](https://pypi.org/project/slimgui/0.8.3/#files) from source because it has no Intel macOS
-wheel; a compiler is needed there.
 
 ## Animations as frames
 
